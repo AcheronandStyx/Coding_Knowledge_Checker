@@ -26,12 +26,20 @@
             </div>
         </div>
         <div id="question"></div>
+        <div>
+            <h3 id="grade"></h3>
+        </div>
         <div id="score-form" class="hidden">
             <h3>Knowledge Check Complete!</h3>
             <p id="final-score"></p>
-            <div class="form-group">
-                <input type="text" name="initials" class="text-input" placeholder="Enter your intials" />
-              </div>
+            <form id="score">
+                <div class="form-group">
+                    <input type="text" name="initials" class="text-input" placeholder="Enter your intials"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn" id="submit-score" type="submit">Submit</button>
+                </div>
+            </form>
         </div>
     </header>
     <main>

@@ -42,7 +42,8 @@ var introEl = document.querySelector("#intro");
 var quizEl = document.querySelector("#question");
 var timerEl = document.querySelector("#countdown");
 var scoreEl = document.querySelector("#final-score");
-var scoreFormEl = document.querySelector("#score-form")
+var scoreFormEl = document.querySelector("#score-form");
+var gradeEl = document.querySelector("#grade");
 
 var currentQuestion = 0; // currently selected question int the questiosn array
 var timeLeft = 60; // initialize the timer as global so it can be accessed anywhere
@@ -96,8 +97,8 @@ var createQuestionEl = function () {
     // iterate through object creating child buttons as li's of the answerListEl ul
     for (var i = 0; i < 4; i++) {
         var answerEl = document.createElement("li");
-        answerEl.id = i + 1;
-        answerEl.innerHTML = "<button class='btn' type='submit'>" + questions[currentQuestion].answers[i] + "</button>";
+        var temp = i + 1;
+        answerEl.innerHTML = "<button class='btn' id='" + temp + "' type='submit' onclick='runQuestion()' >" + questions[currentQuestion].answers[i] + "</button>";
         answerListEl.appendChild(answerEl);
     };
 
@@ -132,36 +133,46 @@ function countdown() {
     }, 1000);
 }
 
-var quizHandler = function () {
+var startQuiz = function () {
     event.preventDefault(); // prevent default reload of page
     // hide the intro blurb and start quiz button
     introEl.style.display = "none";
     countdown(); // start countdown
 
+    runQuestion(); // call run question to start the question loop
+   
+}
 
-    // initialize time logic before the for loop
+var runQuestion = function () {
+    createQuestionEl(); // call createQuestionEl with the question object at index i
+    var element = event.target;
+    var usersAnswer = element.id;
 
-    // for loop goes in a callback function
-    /*for (var i = 0; i < questions.length; i++) {
+    var correct = questions[currentQuestion].correct
+    console.log(usersAnswer);
+    console.log(correct);
+    console.log(questions.length);
+    
 
-        // REMOVES FIRST CHILD OF THE QUIZ ELEMENT
-       // quizEl.removeChild(quizEl.childNodes[0]);
-    }*/
+    if (usersAnswer == correct) {
+        gradeEl.textContent = "Correct!";
 
-    // build event listener loop to go throughh questions
-    while (currentQuestion < questions.length ) {
-        createQuestionEl(); // call createQuestionEl with the question object at index i
-        currentQuestion++;
-
-        quizEl.addEventListener("submit", function() {
-
-        });
-
+    } else {
+        gradeEl.textContent = "Incorrect!";
+        timeLeft = timeLeft - 10;
     }
 
-    // once all questions are answered through call end quiz
-    endQuiz();
-}
+    currentQuestion++;
+    
+
+    if (currentQuestion === questions.length) { // if final question has been answered remove question and call endQuiz
+        quizEl.removeChild(quizEl.childNodes[0]);
+        endQuiz();
+    } else { // else remove question, increment currentQuestion and call createQuestionEl again
+        quizEl.removeChild(quizEl.childNodes[0]);
+        createQuestionEl();
+    }
+};
 
 var endQuiz = function () {
 
@@ -173,7 +184,7 @@ var endQuiz = function () {
 
 
 // on click run quizHandler function
-startEl.addEventListener("click", quizHandler);
+startEl.addEventListener("click", startQuiz);
 
 
 // when question is answer remove it with removeChild on the parent.
