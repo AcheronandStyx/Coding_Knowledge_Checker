@@ -41,6 +41,8 @@ var question = document.querySelector(".container"); // select the parent so we 
 var introEl = document.querySelector("#intro");
 var quizEl = document.querySelector("#question");
 var timerEl = document.querySelector("#countdown");
+var scoreEl = document.querySelector("#final-score");
+var scoreFormEl = document.querySelector("#score-form")
 
 var currentQuestion = 0; // currently selected question int the questiosn array
 var timeLeft = 60; // initialize the timer as global so it can be accessed anywhere
@@ -95,7 +97,7 @@ var createQuestionEl = function () {
     for (var i = 0; i < 4; i++) {
         var answerEl = document.createElement("li");
         answerEl.id = i + 1;
-        answerEl.innerHTML = "<button class='btn'>" + questions[currentQuestion].answers[i] + "</button>";
+        answerEl.innerHTML = "<button class='btn' type='submit'>" + questions[currentQuestion].answers[i] + "</button>";
         answerListEl.appendChild(answerEl);
     };
 
@@ -109,48 +111,66 @@ var createQuestionEl = function () {
     // maybe add id of correct to correct answer and use that to check?
 };
 
-var quizHandler = function () {
-
-    event.preventDefault(); // prevent default reload of page
-    // hide the intro blurb and start quiz button
-    introEl.dataset.state = "hidden";
-
-    // initialize time logic before the for loop
-
-    // for loop goes in a callback function
-    for (var i = 0; i < questions.length; i++) {
-        createQuestionEl(); // call createQuestionEl with the question object at index i
-        currentQuestion++;
-
-    // REMOVES FIRST CHILD OF THE QUIZ ELEMENT
-       // quizEl.removeChild(quizEl.childNodes[0]);
-
-    }
-
-
-}
-
-
 function countdown() {
     var timeInterval = setInterval(function () {
         if (timeLeft > 1) {
 
-            timeInterval.textContent = timeLeft + ' seconds remaining';
+            timerEl.textContent = "Time: " + timeLeft;
             timeLeft--;
         } else if (timeLeft === 1) {
             // when 'timeLeft it becomes second
-            timeInterval.textContent = timeLeft + ' second remaining';
+            timerEl.textContent = "Time: " + timeLeft;
             timeLeft--;
         } else {
             // once time is up tell user
-            timeLeft.textContent = 'Times Up!';
+            timerEl.textContent = 'Times Up!';
 
             clearInterval(timeInterval);
 
-            displayMessage();
+            endQuiz(); // call end quiz if timer reaches zero
         }
     }, 1000);
 }
+
+var quizHandler = function () {
+    event.preventDefault(); // prevent default reload of page
+    // hide the intro blurb and start quiz button
+    introEl.style.display = "none";
+    countdown(); // start countdown
+
+
+    // initialize time logic before the for loop
+
+    // for loop goes in a callback function
+    /*for (var i = 0; i < questions.length; i++) {
+
+        // REMOVES FIRST CHILD OF THE QUIZ ELEMENT
+       // quizEl.removeChild(quizEl.childNodes[0]);
+    }*/
+
+    // build event listener loop to go throughh questions
+    while (currentQuestion < questions.length ) {
+        createQuestionEl(); // call createQuestionEl with the question object at index i
+        currentQuestion++;
+
+        quizEl.addEventListener("submit", function() {
+
+        });
+
+    }
+
+    // once all questions are answered through call end quiz
+    endQuiz();
+}
+
+var endQuiz = function () {
+
+    scoreEl.textContent = "Your final score is: " + timeLeft;
+    scoreFormEl.style.display = "block";
+
+};
+
+
 
 // on click run quizHandler function
 startEl.addEventListener("click", quizHandler);

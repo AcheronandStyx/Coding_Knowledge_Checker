@@ -11,11 +11,13 @@
 
 <body>
     <header>
-        
-        <div id="intro" data-state="visible">
+        <div>
             <nav>
                 <a href="./scores.html">View High Scores</a>
             </nav>
+            <h2 id="countdown">Time: </h2>
+        </div>
+        <div id="intro" data-state="visible">
             <h1 class="page-title">Javascript Knowledge Checker</h1>
             <p>Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers
                 will penalize your score/time by ten seconds!</p>
@@ -24,9 +26,9 @@
             </div>
         </div>
         <div id="question"></div>
-        <div id="score-form" data-state="hidden">
+        <div id="score-form" class="hidden">
             <h3>Knowledge Check Complete!</h3>
-            <p>Your final score is </p>
+            <p id="final-score"></p>
             <div class="form-group">
                 <input type="text" name="initials" class="text-input" placeholder="Enter your intials" />
               </div>
